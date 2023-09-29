@@ -1,16 +1,26 @@
 version: '3.8'
 services:
-  dev-db:
-    image: postgres:13
+  app:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: nest-app
+    environment:
+      - PORT=3000
     ports:
-    - 5434:5432
+      - '3000:3000'
+    depends_on:
+      - db
+    volumes:
+      - ./src:/app/src
+  db:
+    image: postgres:13
+    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: nest
-    networks:
-      - freecodecamp
-networks:
-  freecodecamp:
-
-
+    container_name: postgres
+    
+    ports:
+      - '5432:5432'
